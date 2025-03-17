@@ -125,15 +125,43 @@ public:
 	Character(std::shared_ptr<int> health) : m_health(health) {};
 	void ShowHealth() { std::cout << "Health: " << *m_health << std::endl; }
 };
+
+class PowerUp
+{
+public:
+	std::string m_type;
+	PowerUp(std::string type) : m_type(type) {}
+	void Activate() { std::cout << "Power Up Activated: " << m_type << std::endl; }
+	~PowerUp() { std::cout << m_type << " Power-Up Destroyed!" << std::endl; }
+};
+
+class Car
+{
+public:
+	std::weak_ptr<PowerUp> activePowerUp;
+
+	void UsePowerUp()
+	{
+		if (auto powerUp = activePowerUp.lock())
+		{
+			powerUp->Activate();
+		}
+		else
+		{
+			std::cout << "Power-Up no longer avaliable! \n";
+		}
+	}
+};
+
 // SMART POINTERS: END
 
 // STACK VS HEAP: START
-void Stack() // FAST, auto deallocation
+static void Stack() // FAST, auto deallocation
 {
 	int a = 4;
 }
 
-void Heap() // SLOW, manual deallocation
+static void Heap() // SLOW, manual deallocation
 {
 	int* a = new int(4);
 	delete a;
@@ -144,7 +172,7 @@ void Heap() // SLOW, manual deallocation
 class Bullet {
 public:
 	bool active = false;
-	void Fire() { active = true; }
+	void Fire() { active = true; std::cout << "FIRED!"; }
 	void Reset() { active = false; }
 };
 
@@ -154,7 +182,7 @@ public:
 	BulletPool(int size) { bullets.resize(size); }
 
 	Bullet* GetBullet() {
-		for (auto& b : bullets) {
+		for (Bullet& b : bullets) {
 			if (!b.active) return &b;
 		}
 		return nullptr;
@@ -208,6 +236,15 @@ int main()
 	IronMan.ShowHealth();
 	*health -= 50;
 	Thanos.ShowHealth();
+
+	Car car;
+	{
+		std::shared_ptr<PowerUp> speedBoost = std::make_shared<PowerUp>("Speed Boost");
+		car.activePowerUp = speedBoost;
+
+		car.UsePowerUp();
+	}
+	car.UsePowerUp();
 	// SMART POINTERS_CALL END
 
 	// STACK VS HEAP_CALL START
@@ -221,16 +258,15 @@ int main()
 	auto bullet1 = bulletPool.GetBullet();
 	
 	if (bullet1) {
-		bullet1->Fire(); // Fire the bullet
+		bullet1->Fire();
 		std::cout << "Bullet 1 fired!" << std::endl;
 	}
 	else {
 		std::cout << "No available bullets!" << std::endl;
 	}
 
-	// Get another bullet from the pool
 	auto bullet2 = bulletPool.GetBullet();
-	decltype(bullet2);
+
 	if (bullet2) {
 		bullet2->Fire(); // Fire the bullet
 		std::cout << "Bullet 2 fired!" << std::endl;

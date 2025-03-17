@@ -13,10 +13,22 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\RPGCharacterSystem">
+      <UniqueIdentifier>{8cd99023-27d0-4d8a-9821-49b527fa0c1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SpaceBattleSystem">
+      <UniqueIdentifier>{920b4e0b-1521-4929-8ba9-cc42f5adf158}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RPGCharacterSystem.cpp">
+      <Filter>Source Files\RPGCharacterSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="SpaceBattleSystem.cpp">
+      <Filter>Source Files\SpaceBattleSystem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
