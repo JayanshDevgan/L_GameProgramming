@@ -141,6 +141,26 @@ void Heap() // SLOW, manual deallocation
 // STACK VS HEAP: END
 
 // OBJECT POOLING: START
+class Bullet {
+public:
+	bool active = false;
+	void Fire() { active = true; }
+	void Reset() { active = false; }
+};
+
+class BulletPool {
+	std::vector<Bullet> bullets;
+public:
+	BulletPool(int size) { bullets.resize(size); }
+
+	Bullet* GetBullet() {
+		for (auto& b : bullets) {
+			if (!b.active) return &b;
+		}
+		return nullptr;
+	}
+};
+
 // OBJECT POOLING: END
 
 int main()
@@ -196,6 +216,39 @@ int main()
 	// STACK VS HEAP_CALL END'
 
 	// OBJECT POOLING_CALL START
+	BulletPool bulletPool(10);
+
+	auto bullet1 = bulletPool.GetBullet();
+	
+	if (bullet1) {
+		bullet1->Fire(); // Fire the bullet
+		std::cout << "Bullet 1 fired!" << std::endl;
+	}
+	else {
+		std::cout << "No available bullets!" << std::endl;
+	}
+
+	// Get another bullet from the pool
+	auto bullet2 = bulletPool.GetBullet();
+	decltype(bullet2);
+	if (bullet2) {
+		bullet2->Fire(); // Fire the bullet
+		std::cout << "Bullet 2 fired!" << std::endl;
+	}
+	else {
+		std::cout << "No available bullets!" << std::endl;
+	}
+
+	// Get another bullet from the pool
+	auto bullet3 = bulletPool.GetBullet();
+	if (bullet3) {
+		bullet3->Fire(); // Fire the bullet
+		std::cout << "Bullet 3 fired!" << std::endl;
+	}
+	else {
+		std::cout << "No available bullets!" << std::endl;
+	}
+
 	// OBJECT POOLING_CALL END
 
 	return 0;
