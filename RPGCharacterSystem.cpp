@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <algorithm>
 
 class Party;
 
@@ -41,21 +42,7 @@ public:
 
 	std::shared_ptr<Party> GetParty() const { return m_party; }
 
-	void Attack(std::shared_ptr<Character> player) {
-		if (player != nullptr && m_party != nullptr && player->GetParty() != nullptr)
-		{
-			if (m_party != player->GetParty())
-			{
-				if (m_weapon) { 
-					std::cout << GetName() << " --> " << player->GetName() << "\n\t";
-					m_weapon->Use();
-					player->m_health -= m_weapon->GetDamage();
-					if (player->m_health <= 0) player->GetParty()->Remove(player);
-				}
-				else std::cout << m_name << " has no weapon!" << std::endl;
-			}
-		}
-	}
+	void Attack(std::shared_ptr<Character> player);
 };
 
 class Party
@@ -95,6 +82,21 @@ public:
 	}
 };
 
+void Character::Attack(std::shared_ptr<Character> player) {
+	if (player != nullptr && m_party != nullptr && player->GetParty() != nullptr)
+	{
+		if (m_party != player->GetParty())
+		{
+			if (m_weapon) {
+				std::cout << GetName() << " --> " << player->GetName() << "\n\t";
+				m_weapon->Use();
+				player->m_health -= m_weapon->GetDamage();
+				if (player->m_health <= 0) player->GetParty()->Remove(player);
+			}
+			else std::cout << m_name << " has no weapon!" << std::endl;
+		}
+	}
+}
 
 int main()
 {
