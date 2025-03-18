@@ -33,7 +33,7 @@ public:
 	Character(std::string name, int level, int health, int mana, std::shared_ptr<Party> party) :
 		m_name(name), m_level(level), m_health(health), m_mana(mana), m_party(party) {}
 
-	std::weak_ptr<Character> m_teammates;
+	std::shared_ptr<Character> m_teammates;
 
 	std::string GetName() { return m_name; }
 
@@ -50,6 +50,7 @@ public:
 					std::cout << GetName() << " --> " << player->GetName() << "\n\t";
 					m_weapon->Use();
 					player->m_health -= m_weapon->GetDamage();
+					if (player->m_health <= 0) player->GetParty()->Remove(player);
 				}
 				else std::cout << m_name << " has no weapon!" << std::endl;
 			}
@@ -87,6 +88,10 @@ public:
 		if (GetPlayersSize() < m_max_players)
 			m_players.push_back(player);
 		else std::cout << "Party is full" << std::endl;
+	}
+
+	void Remove(std::shared_ptr<Character> player) { 
+		m_players.erase(std::remove(m_players.begin(), m_players.end(), player), m_players.end());
 	}
 };
 
