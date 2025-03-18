@@ -2,6 +2,8 @@
 #include <vector>
 #include <memory>
 
+class Party;
+
 class Weapon
 {
 private:
@@ -16,8 +18,6 @@ public:
 	int GetDamage() const { return m_damage; }
 };
 
-class Party;
-
 class Character
 {
 private:
@@ -29,6 +29,7 @@ private:
 	std::shared_ptr<Party> m_party;
 
 public:
+
 	Character(std::string name, int level, int health, int mana, std::shared_ptr<Party> party) :
 		m_name(name), m_level(level), m_health(health), m_mana(mana), m_party(party) {}
 
@@ -37,12 +38,19 @@ public:
 	std::string GetName() { return m_name; }
 
 	void SetWeapon(std::unique_ptr<Weapon> w) { m_weapon = std::move(w); }
+
+	std::shared_ptr<Party> GetParty() const { return m_party; }
+
 	void Attack(std::shared_ptr<Character> player) {
-		if (player != nullptr)
+		if (player != nullptr && m_party != nullptr && player->GetParty() != nullptr)
 		{
-			if (m_party->GetPlayerPartyIDByName(player->GetName()) != m_party->GetPlayerPartyIDByName(this->GetName()))
+			if (m_party != player->GetParty())
 			{
-				if (m_weapon) { m_weapon->Use(); player->m_health -= m_weapon->GetDamage(); }
+				if (m_weapon) { 
+					std::cout << GetName() << " --> " << player->GetName() << "\n\t";
+					m_weapon->Use();
+					player->m_health -= m_weapon->GetDamage();
+				}
 				else std::cout << m_name << " has no weapon!" << std::endl;
 			}
 		}
@@ -58,7 +66,8 @@ private:
 
 public:
 	Party(int id, std::string name, int max_players) :
-		m_Id(id), m_name(name), m_max_players(max_players) {}
+		m_Id(id), m_name(name), m_max_players(max_players) {
+	}
 
 	void Show()
 	{
@@ -79,18 +88,8 @@ public:
 			m_players.push_back(player);
 		else std::cout << "Party is full" << std::endl;
 	}
-
-	int GetPlayerPartyIDByName(std::string name)
-	{
-		for (const std::shared_ptr<Character>& player : m_players)
-		{
-			if (player->GetName() == name) {
-				return m_Id;
-			}
-		}
-		return -1;
-	}
 };
+
 
 int main()
 {
