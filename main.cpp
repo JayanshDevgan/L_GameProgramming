@@ -1,6 +1,8 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <stack>
+#include <queue>
 
 // ENCAPSULATION: START
 
@@ -191,6 +193,32 @@ public:
 
 // OBJECT POOLING: END
 
+// DATA STRUCTURES: START
+// LINKED LIST: START
+
+class Node
+{
+public:
+	int data;
+	Node* next;
+
+	Node(int value) : data(value), next(NULL) {}
+};
+
+void printList(Node* head)
+{
+	while (head != NULL)
+	{
+		std::cout << head->data << "->";
+		head = head->next;
+	}
+
+	std::cout << "NULL" << std::endl;
+}
+
+// LINKED LIST: END
+// DATA STRUCTURES: END
+
 int main()
 {
 	// ENCAPSULATION_CALL START
@@ -286,6 +314,36 @@ int main()
 	}
 
 	// OBJECT POOLING_CALL END
+
+	// DATA STRUCTURES_CALL: START
+	// LINKED LIST_CALL: START
+	Node* head = new Node(10);
+	head->next = new Node(20);
+	head->next->next = new Node(30);
+
+	printList(head);
+	// LINKED LIST_CALL: END
+	// STACK_CALL: START
+	std::stack<int> s;
+	s.push(10);
+	s.push(20);
+	s.push(30);
+	
+	std::cout << "Top Element: " << s.top() << std::endl;
+	s.pop();
+	std::cout << "Top After Pop: " << s.top() << std::endl;
+	// STACK_CALL: END
+	// QUEUE_CALL: START
+	std::queue<int> q;
+	q.push(10);
+	q.push(20);
+	q.push(30);
+
+	std::cout << "Front: " << q.front() << std::endl;
+	q.pop();
+	std::cout << "Front after pop " << q.front() << std::endl;
+	// QUEUE_CALL: END
+	// DATA STRUCTURES_CALL: END
 
 	return 0;
 }

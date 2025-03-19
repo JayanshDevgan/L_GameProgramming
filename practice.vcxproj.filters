@@ -24,11 +24,5 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RPGCharacterSystem.cpp">
-      <Filter>Source Files\RPGCharacterSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="SpaceBattleSystem.cpp">
-      <Filter>Source Files\SpaceBattleSystem</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
