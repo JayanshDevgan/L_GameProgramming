@@ -268,6 +268,22 @@ static Vector3 cross(Vector3 A, Vector3 B) {
 }
 
 // VECTORS: END
+// ROTATION: START
+Vector3 rotateZ(Vector3 vec, float angle)
+{
+	float rad = angle * (3.14159265 / 100);
+	return Vector3(
+		vec.m_x * cos(rad) - vec.m_y * sin(rad),
+		vec.m_x * cos(rad) + vec.m_y * sin(rad),
+		vec.m_z
+	);
+}
+
+Vector3 scale(Vector3 vec, float scale_x, float scale_y, float scale_z)
+{
+	return Vector3(vec.m_x * scale_x, vec.m_y * scale_y, vec.m_z * scale_z);
+}
+// ROTATION: END
 // MATHS: END
 
 int main()
@@ -414,6 +430,10 @@ int main()
 	C.print();
 	std::cout << D << std::endl;
 	E.print();
+	Vector3 F = scale(A, 100, 100, 100);
+	Vector3 G = rotateZ(A, 20);
+	F.print();
+	G.print();
 	// MATHS: END
 
 	return 0;
