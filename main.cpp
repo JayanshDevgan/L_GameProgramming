@@ -217,7 +217,58 @@ void printList(Node* head)
 }
 
 // LINKED LIST: END
+
+// TREES: START
+class TNode
+{
+public:
+	int data;
+	TNode* left;
+	TNode* right;
+
+	TNode(int value) : data(value) {
+		left = right = NULL;
+	}
+};
+
+void inorder(TNode* root)
+{
+	if (root == NULL) return;
+	inorder(root->left);
+	std::cout << root->data << std::endl;
+	inorder(root->right);
+}
+// TREES: END 
 // DATA STRUCTURES: END
+
+// MATHS: START
+// VECTORS: START
+struct Vector3
+{
+	float m_x, m_y, m_z;
+	
+	Vector3(float x, float y, float z) : m_x(x), m_y(y), m_z(z) {}
+
+	Vector3 operator+(const Vector3& vec)
+	{
+		return Vector3(m_x + vec.m_x, m_y + vec.m_y, m_z + vec.m_z);
+	}
+
+	void print() const { std::cout << "[" << m_x << ", " << m_y << ", " << m_z << "]" << std::endl; }
+};
+
+static float dot(Vector3 A, Vector3 B) { return A.m_x * B.m_x + A.m_y * B.m_y + A.m_z * B.m_z; }
+
+static Vector3 cross(Vector3 A, Vector3 B) {
+	return Vector3(
+		A.m_y * B.m_z - A.m_z - B.m_y,
+		A.m_z * B.m_z - A.m_x * B.m_z,
+		A.m_x * B.m_y - A.m_y * B.m_x
+	);
+}
+
+// VECTORS: END
+// MATHS: END
 
 int main()
 {
@@ -343,7 +394,27 @@ int main()
 	q.pop();
 	std::cout << "Front after pop " << q.front() << std::endl;
 	// QUEUE_CALL: END
+	
+	// TREES_CALL: START
+	TNode* root = new TNode(30);
+	root->left = new TNode(20);
+	root->right = new TNode(10);
+
+	inorder(root);
+	// TREES_CALL: END
 	// DATA STRUCTURES_CALL: END
+
+	// MATHS: START
+	// VECTOR_CALL: START
+	// VECTOR_CALL: END
+	Vector3 A(3, 4, 0), B(1, 3, 5);
+	Vector3 C = A + B;
+	float D = dot(A, B);
+	Vector3 E = cross(A, B);
+	C.print();
+	std::cout << D << std::endl;
+	E.print();
+	// MATHS: END
 
 	return 0;
 }
