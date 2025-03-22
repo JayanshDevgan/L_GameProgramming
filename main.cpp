@@ -3,6 +3,16 @@
 #include <vector>
 #include <stack>
 #include <queue>
+#include <cmath>
+
+
+#if defined(__GNUC__) || defined(__clang__)
+	#include <cmath>
+#else 
+	#ifndef M_PI
+	#define M_PI 3.14159265358979323846
+	#endif
+#endif
 
 // ENCAPSULATION: START
 
@@ -269,7 +279,7 @@ static Vector3 cross(Vector3 A, Vector3 B) {
 
 // VECTORS: END
 // ROTATION: START
-Vector3 rotateZ(Vector3 vec, float angle)
+static Vector3 rotateZ(Vector3 vec, float angle)
 {
 	float rad = angle * (3.14159265 / 100);
 	return Vector3(
@@ -279,12 +289,72 @@ Vector3 rotateZ(Vector3 vec, float angle)
 	);
 }
 
-Vector3 scale(Vector3 vec, float scale_x, float scale_y, float scale_z)
+static Vector3 scale(Vector3 vec, float scale_x, float scale_y, float scale_z)
 {
 	return Vector3(vec.m_x * scale_x, vec.m_y * scale_y, vec.m_z * scale_z);
 }
 // ROTATION: END
+// ROTATION USING TRIGONOMETRY: START
+struct Vector2 {
+	float m_x, m_y;
+
+	Vector2(float x, float y) : m_x(x), m_y(y) {}
+
+	Vector2 rotate(float angle)
+	{
+		float rad = angle * (M_PI / 180);
+		return Vector2(
+			m_x * cos(rad) - m_y * sin(rad),
+			m_x * sin(rad) + m_y * cos(rad)
+		);
+	}
+
+	void print() const { std::cout << "[" << m_x << ", " << m_y << "]" << std::endl; }
+};
+// ROTATOIN USING TRIGONOMETRY: END
 // MATHS: END
+
+// DIJKSTRA ALGORITHM: START
+struct Edge
+{
+	int to, weight;
+};
+
+void dijkstra(int source, int n, std::vector<std::vector<Edge>>& graph)
+{
+	std::vector<int> dist(n, INT_MAX);
+	std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<std::pair<int, int>>> pq;
+
+	dist[source] = 0;
+	pq.push({ 0, source });
+	while (!pq.empty())
+	{
+		int currentDist = pq.top().first;
+		int node = pq.top().second;
+		pq.pop();
+
+		if (currentDist > dist[node]) continue;
+
+		for (const Edge& edge : graph[node])
+		{
+			int next = edge.to;
+			int newDist = currentDist + edge.weight;
+
+			if (newDist < dist[next])
+			{
+				dist[next] = newDist;
+				pq.push({ newDist, next });
+			}
+		}
+	}
+
+	std::cout << "Shortest distance from source " << source << ":\n";
+	for (int i = 0; i < n; i++)
+	{
+		std::cout << "To Node " << i << " -> " << (dist[i] == INT_MAX ? -1 : dist[i]) << std::endl;
+	}
+}
+// DIJKSTRA ALGORITHM: END
 
 int main()
 {
@@ -434,7 +504,23 @@ int main()
 	Vector3 G = rotateZ(A, 20);
 	F.print();
 	G.print();
+	Vector2 point(1, 0);
+	Vector2 rotated = point.rotate(90);
+	rotated.print();
 	// MATHS: END
+
+	// DIJKSTRA ALGORITHM_CALL: START
+	int n = 5;
+	std::vector<std::vector<Edge>> graph(n);
+	
+	graph[0] = { {1, 4}, {2, 1} };
+	graph[1] = { {0, 4}, {2, 2}, {3, 5} };
+	graph[2] = { {0, 1}, {1, 2}, {4, 3} };
+	graph[3] = { {1, 5}, {4, 6} };
+	graph[4] = { {2, 3}, {3, 6} };
+
+	dijkstra(0, n, graph);
+	// DIJKSTRA ALGORITHM_CALL: END // TIME COMPLEXITY O((V + E) LOG V) where V is number of Vertices and E is number of Edges
 
 	return 0;
 }
